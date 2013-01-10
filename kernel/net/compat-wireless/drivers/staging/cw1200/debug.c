@@ -112,20 +112,6 @@ static int cw1200_status_show(struct seq_file *seq, void *v)
 	struct list_head *item;
 	struct cw1200_common *priv = seq->private;
 	struct cw1200_debug_priv *d = priv->debug;
-	int ba_cnt, ba_acc, ba_cnt_rx, ba_acc_rx, ba_avg = 0, ba_avg_rx = 0;
-	bool ba_ena;
-
-	spin_lock_bh(&priv->ba_lock);
-	ba_cnt = priv->debug->ba_cnt;
-	ba_acc = priv->debug->ba_acc;
-	ba_cnt_rx = priv->debug->ba_cnt_rx;
-	ba_acc_rx = priv->debug->ba_acc_rx;
-	ba_ena = priv->ba_ena;
-	if (ba_cnt)
-		ba_avg = ba_acc / ba_cnt;
-	if (ba_cnt_rx)
-		ba_avg_rx = ba_acc_rx / ba_cnt_rx;
-	spin_unlock_bh(&priv->ba_lock);
 
 	seq_puts(seq,   "CW1200 Wireless LAN driver status\n");
 	seq_printf(seq, "Hardware:   %d.%d\n",
@@ -238,11 +224,6 @@ static int cw1200_status_show(struct seq_file *seq, void *v)
 		++i;
 	spin_unlock_bh(&priv->tx_policy_cache.lock);
 	seq_printf(seq, "RC in use:  %d\n", i);
-	seq_printf(seq, "BA stat:    %d, %d (%d)\n",
-		ba_cnt, ba_acc, ba_avg);
-	seq_printf(seq, "BA RX stat:    %d, %d (%d)\n",
-		ba_cnt_rx, ba_acc_rx, ba_avg_rx);
-	seq_printf(seq, "Block ACK:  %s\n", ba_ena ? "on" : "off");
 
 	seq_puts(seq, "\n");
 	for (i = 0; i < 4; ++i) {

@@ -45,10 +45,6 @@ struct cw1200_debug_priv {
 	int tx_ttl;
 	int tx_burst;
 	int rx_burst;
-	int ba_cnt;
-	int ba_acc;
-	int ba_cnt_rx;
-	int ba_acc_rx;
 #ifdef CONFIG_CW1200_ITP
 	struct cw1200_itp itp;
 #endif /* CONFIG_CW1200_ITP */
@@ -110,16 +106,6 @@ static inline void cw1200_debug_tx_burst(struct cw1200_common *priv)
 static inline void cw1200_debug_rx_burst(struct cw1200_common *priv)
 {
 	++priv->debug->rx_burst;
-}
-
-static inline void cw1200_debug_ba(struct cw1200_common *priv,
-				   int ba_cnt, int ba_acc, int ba_cnt_rx,
-				   int ba_acc_rx)
-{
-	priv->debug->ba_cnt = ba_cnt;
-	priv->debug->ba_acc = ba_acc;
-	priv->debug->ba_cnt_rx = ba_cnt_rx;
-	priv->debug->ba_acc_rx = ba_acc_rx;
 }
 
 int cw1200_print_fw_version(struct cw1200_common *priv, u8 *buf, size_t len);
@@ -199,11 +185,6 @@ static inline void cw1200_debug_tx_burst(struct cw1200_common *priv)
 }
 
 static inline void cw1200_debug_rx_burst(struct cw1200_common *priv)
-{
-}
-
-static inline void cw1200_debug_ba(struct cw1200_common *priv,
-				   int ba_cnt, int ba_acc, int ba_cnt_rx, int ba_acc_rx)
 {
 }
 

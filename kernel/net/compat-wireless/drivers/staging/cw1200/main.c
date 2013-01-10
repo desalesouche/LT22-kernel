@@ -367,14 +367,9 @@ static struct ieee80211_hw *cw1200_init_common(size_t priv_data_len)
 	INIT_WORK(&priv->update_filtering_work, cw1200_update_filtering_work);
 	INIT_WORK(&priv->set_beacon_wakeup_period_work,
 		cw1200_set_beacon_wakeup_period_work);
-	INIT_WORK(&priv->ba_work, cw1200_ba_work);
 	init_timer(&priv->mcast_timeout);
 	priv->mcast_timeout.data = (unsigned long)priv;
 	priv->mcast_timeout.function = cw1200_mcast_timeout;
-	spin_lock_init(&priv->ba_lock);
-	init_timer(&priv->ba_timer);
-	priv->ba_timer.data = (unsigned long)priv;
-	priv->ba_timer.function = cw1200_ba_timer;
 	if (unlikely(cw1200_queue_stats_init(&priv->tx_queue_stats,
 			CW1200_LINK_ID_MAX,
 			cw1200_skb_dtor,
@@ -474,7 +469,6 @@ void cw1200_unregister_common(struct ieee80211_hw *dev)
 	ieee80211_unregister_hw(dev);
 
 	del_timer_sync(&priv->mcast_timeout);
-	del_timer_sync(&priv->ba_timer);
 
 	cw1200_debug_release(priv);
 
